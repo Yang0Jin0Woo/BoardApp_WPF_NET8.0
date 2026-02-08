@@ -92,14 +92,18 @@ namespace BoardApp.ViewModels
 
             try
             {
-                await _service.UpdateAsync(new Post
+                var updated = new Post
                 {
                     Id = SelectedPost.Id,
                     Title = Title,
                     Content = Content,
-                    Author = Author
-                });
-                await LoadAsync();
+                    Author = Author,
+                    CreatedAtUtc = SelectedPost.CreatedAtUtc,
+                    UpdatedAtUtc = DateTime.UtcNow
+                };
+
+                await _service.UpdateAsync(updated);
+                ReplacePostInList(updated);
                 StatusMessage = "수정 완료";
             }
             catch (Exception ex)
@@ -120,8 +124,9 @@ namespace BoardApp.ViewModels
             try
             {
                 await _service.DeleteAsync(SelectedPost.Id);
+                Posts.Remove(SelectedPost);
                 ClearForm();
-                await LoadAsync();
+                SelectedPost = null;
                 StatusMessage = "삭제 완료";
             }
             catch (Exception ex)
@@ -143,6 +148,24 @@ namespace BoardApp.ViewModels
             Title = "";
             Content = "";
             Author = "";
+        }
+
+        private void ReplacePostInList(Post updated)
+        {
+            var index = -1;     // 아직 못 찾음(루프에서 찾으면 index를 실제 위치로 설정)
+            for (int i = 0; i < Posts.Count; i++)
+            {
+                if (Posts[i].Id == updated.Id)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index >= 0)
+            {
+                Posts[index] = updated;
+                SelectedPost = updated;
+            }
         }
     }
 }
