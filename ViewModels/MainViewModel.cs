@@ -65,7 +65,12 @@ namespace BoardApp.ViewModels
         {
             try
             {
-                await _service.CreateAsync(Title, Content, Author);
+                await _service.CreateAsync(new Post
+                {
+                    Title = Title,
+                    Content = Content,
+                    Author = Author
+                });
                 ClearForm();
                 await LoadAsync();
                 StatusMessage = "등록 완료";
@@ -87,7 +92,20 @@ namespace BoardApp.ViewModels
 
             try
             {
-                await _service.UpdateAsync(SelectedPost.Id, Title, Content, Author);
+                var latest = await _service.GetByIdAsync(SelectedPost.Id);
+                if (latest == null)
+                {
+                    StatusMessage = "게시글이 존재하지 않아 수정할 수 없습니다.";
+                    return;
+                }
+
+                await _service.UpdateAsync(new Post
+                {
+                    Id = latest.Id,
+                    Title = Title,
+                    Content = Content,
+                    Author = Author
+                });
                 await LoadAsync();
                 StatusMessage = "수정 완료";
             }
@@ -108,7 +126,14 @@ namespace BoardApp.ViewModels
 
             try
             {
-                await _service.DeleteAsync(SelectedPost.Id);
+                var latest = await _service.GetByIdAsync(SelectedPost.Id);
+                if (latest == null)
+                {
+                    StatusMessage = "게시글이 존재하지 않아 삭제할 수 없습니다.";
+                    return;
+                }
+
+                await _service.DeleteAsync(latest.Id);
                 ClearForm();
                 await LoadAsync();
                 StatusMessage = "삭제 완료";

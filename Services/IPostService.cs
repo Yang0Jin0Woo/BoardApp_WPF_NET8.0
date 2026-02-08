@@ -7,8 +7,9 @@ namespace BoardApp.Services
     public interface IPostService
     {
         Task<List<Post>> GetAllAsync();
-        Task CreateAsync(string title, string content, string author);
-        Task UpdateAsync(int id, string title, string content, string author);
+        Task<Post?> GetByIdAsync(int id);
+        Task CreateAsync(Post post);
+        Task UpdateAsync(Post post);
         Task DeleteAsync(int id);
     }
 }

@@ -16,36 +16,35 @@ namespace BoardApp.Services
         }
 
         public Task<List<Post>> GetAllAsync() => _repo.GetAllAsync();
+        public Task<Post?> GetByIdAsync(int id) => _repo.GetByIdAsync(id);
 
-        public async Task CreateAsync(string title, string content, string author)
+        public async Task CreateAsync(Post post)
         {
-            Validate(title, content, author);
-
-            var post = new Post
-            {
-                Title = title.Trim(),
-                Content = content.Trim(),
-                Author = author.Trim()
-            };
+            if (post == null) throw new ArgumentNullException(nameof(post));
+            Validate(post.Title, post.Content, post.Author);
+            post.Title = post.Title.Trim();
+            post.Content = post.Content.Trim();
+            post.Author = post.Author.Trim();
 
             await _repo.AddAsync(post);
         }
 
-        public async Task UpdateAsync(int id, string title, string content, string author)
+        public async Task UpdateAsync(Post post)
         {
-            Validate(title, content, author);
+            if (post == null) throw new ArgumentNullException(nameof(post));
+            Validate(post.Title, post.Content, post.Author);
 
-            var post = await _repo.GetByIdAsync(id);
-            if (post == null)
+            var existing = await _repo.GetByIdAsync(post.Id);
+            if (existing == null)
             {
                 throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
             }
 
-            post.Title = title.Trim();
-            post.Content = content.Trim();
-            post.Author = author.Trim();
+            existing.Title = post.Title.Trim();
+            existing.Content = post.Content.Trim();
+            existing.Author = post.Author.Trim();
 
-            await _repo.UpdateAsync(post);
+            await _repo.UpdateAsync(existing);
         }
 
         public Task DeleteAsync(int id) => _repo.DeleteAsync(id);
