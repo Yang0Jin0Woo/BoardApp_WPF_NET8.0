@@ -36,7 +36,10 @@ namespace BoardApp.Services
             Validate(title, content, author);
 
             var post = await _repo.GetByIdAsync(id);
-            if (post == null) return;
+            if (post == null)
+            {
+                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
+            }
 
             post.Title = title.Trim();
             post.Content = content.Trim();

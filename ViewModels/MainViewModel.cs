@@ -49,7 +49,12 @@ namespace BoardApp.ViewModels
 
         partial void OnSelectedPostChanged(Post? value)
         {
-            if (value == null) return;
+            if (value == null)
+            {
+                ClearForm();
+                return;
+            }
+
             Title = value.Title;
             Content = value.Content;
             Author = value.Author;

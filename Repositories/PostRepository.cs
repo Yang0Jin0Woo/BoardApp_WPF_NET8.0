@@ -48,7 +48,10 @@ namespace BoardApp.Repositories
             using var db = _dbFactory();
 
             var entity = await db.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
-            if (entity == null) return;
+            if (entity == null)
+            {
+                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
+            }
 
             entity.Title = post.Title;
             entity.Content = post.Content;
