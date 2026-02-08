@@ -8,8 +8,8 @@ namespace BoardApp.Repositories
     {
         Task<List<Post>> GetAllAsync();
         Task<Post?> GetByIdAsync(int id);
-        Task AddAsync(Post post);
-        Task UpdateAsync(Post post);
+        Task<Post> AddAsync(Post post);
+        Task<Post> UpdateAsync(Post post);
         Task DeleteAsync(int id);
     }
 }

@@ -32,7 +32,7 @@ namespace BoardApp.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task AddAsync(Post post)
+        public async Task<Post> AddAsync(Post post)
         {
             using var db = _dbFactory();
 
@@ -41,9 +41,10 @@ namespace BoardApp.Repositories
 
             db.Posts.Add(post);
             await db.SaveChangesAsync();
+            return post;
         }
 
-        public async Task UpdateAsync(Post post)
+        public async Task<Post> UpdateAsync(Post post)
         {
             using var db = _dbFactory();
             post.UpdatedAtUtc = DateTime.UtcNow;
@@ -55,11 +56,8 @@ namespace BoardApp.Repositories
             entry.Property(p => p.Author).IsModified = true;
             entry.Property(p => p.UpdatedAtUtc).IsModified = true;
 
-            var affected = await db.SaveChangesAsync();
-            if (affected == 0)
-            {
-                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
-            }
+            await db.SaveChangesAsync();
+            return post;
         }
 
         public async Task DeleteAsync(int id)
@@ -67,11 +65,7 @@ namespace BoardApp.Repositories
             using var db = _dbFactory();
 
             db.Posts.Remove(new Post { Id = id });
-            var affected = await db.SaveChangesAsync();
-            if (affected == 0)
-            {
-                throw new InvalidOperationException("게시글이 존재하지 않아 삭제할 수 없습니다.");
-            }
+            await db.SaveChangesAsync();
         }
 
     }

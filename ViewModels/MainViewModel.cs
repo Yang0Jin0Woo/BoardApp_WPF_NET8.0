@@ -64,14 +64,14 @@ namespace BoardApp.ViewModels
         {
             try
             {
-                await _service.CreateAsync(new Post
+                var created = await _service.CreateAsync(new Post
                 {
                     Title = Title,
                     Content = Content,
                     Author = Author
                 });
+                Posts.Insert(0, created);
                 ClearForm();
-                await LoadAsync();
                 StatusMessage = "등록 완료";
             }
             catch (Exception ex)
@@ -99,8 +99,8 @@ namespace BoardApp.ViewModels
                     Author = Author
                 };
 
-                await _service.UpdateAsync(updated);
-                ReplacePostInList(updated);
+                var normalized = await _service.UpdateAsync(updated);
+                ReplacePostInList(normalized);
                 StatusMessage = "수정 완료";
             }
             catch (Exception ex)

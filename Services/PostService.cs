@@ -18,7 +18,7 @@ namespace BoardApp.Services
         public Task<List<Post>> GetAllAsync() => _repo.GetAllAsync();
         public Task<Post?> GetByIdAsync(int id) => _repo.GetByIdAsync(id);
 
-        public async Task CreateAsync(Post post)
+        public async Task<Post> CreateAsync(Post post)
         {
             if (post == null) throw new ArgumentNullException(nameof(post));
             Validate(post.Title, post.Content, post.Author);
@@ -26,10 +26,10 @@ namespace BoardApp.Services
             post.Content = post.Content.Trim();
             post.Author = post.Author.Trim();
 
-            await _repo.AddAsync(post);
+            return await _repo.AddAsync(post);
         }
 
-        public async Task UpdateAsync(Post post)
+        public async Task<Post> UpdateAsync(Post post)
         {
             if (post == null) throw new ArgumentNullException(nameof(post));
             Validate(post.Title, post.Content, post.Author);
@@ -44,7 +44,7 @@ namespace BoardApp.Services
             existing.Content = post.Content.Trim();
             existing.Author = post.Author.Trim();
 
-            await _repo.UpdateAsync(existing);
+            return await _repo.UpdateAsync(existing);
         }
 
         public async Task DeleteAsync(int id)
