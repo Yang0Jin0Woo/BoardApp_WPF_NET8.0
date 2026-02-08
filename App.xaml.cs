@@ -15,10 +15,52 @@ namespace BoardApp
         {
             base.OnStartup(e);
 
+            if (!TryMigrateDatabase())
+            {
+                Shutdown(-1);
+                return;
+            }
+
+            var window = CreateMainWindow();
+            window.Show();
+        }
+
+        // Composition Root (애플리케이션 구성 전담)
+        private MainWindow CreateMainWindow()
+        {
+            var vm = CreateMainViewModel();
+            return new MainWindow { DataContext = vm };
+        }
+
+        private MainViewModel CreateMainViewModel()
+        {
+            var service = CreatePostService();
+            return new MainViewModel(service);
+        }
+
+        private IPostService CreatePostService()
+        {
+            var repo = CreatePostRepository();
+            return new PostService(repo);
+        }
+
+        private IPostRepository CreatePostRepository()
+        {
+            var dbFactory = CreateDbFactory();
+            return new PostRepository(dbFactory);
+        }
+
+        private static Func<AppDbContext> CreateDbFactory()
+            => () => new AppDbContext();
+
+        // Startup (인프라 초기화)
+        private static bool TryMigrateDatabase()
+        {
             try
             {
                 using var db = new AppDbContext();
                 db.Database.Migrate();
+                return true;
             }
             catch (Exception ex)
             {
@@ -28,18 +70,8 @@ namespace BoardApp
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
 
-                Shutdown(-1);
-                return;
+                return false;
             }
-
-            Func<AppDbContext> dbFactory = () => new AppDbContext();
-
-            IPostRepository repo = new PostRepository(dbFactory);
-            IPostService service = new PostService(repo);
-            var vm = new MainViewModel(service);
-
-            var window = new MainWindow { DataContext = vm };
-            window.Show();
         }
     }
 }
