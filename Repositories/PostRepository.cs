@@ -55,7 +55,11 @@ namespace BoardApp.Repositories
             entry.Property(p => p.Author).IsModified = true;
             entry.Property(p => p.UpdatedAtUtc).IsModified = true;
 
-            await db.SaveChangesAsync();
+            var affected = await db.SaveChangesAsync();
+            if (affected == 0)
+            {
+                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
+            }
         }
 
         public async Task DeleteAsync(int id)
