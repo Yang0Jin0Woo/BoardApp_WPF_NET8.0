@@ -98,8 +98,7 @@ namespace BoardApp.ViewModels
                     Title = Title,
                     Content = Content,
                     Author = Author,
-                    CreatedAtUtc = SelectedPost.CreatedAtUtc,
-                    UpdatedAtUtc = DateTime.UtcNow
+                    CreatedAtUtc = SelectedPost.CreatedAtUtc
                 };
 
                 await _service.UpdateAsync(updated);
