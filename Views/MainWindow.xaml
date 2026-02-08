@@ -27,12 +27,21 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <DockPanel Grid.Row="0">
-                        <TextBlock FontSize="15" FontWeight="SemiBold" Text="게시글 목록"/>
-                        <TextBlock DockPanel.Dock="Right"
-                                   Text="{Binding Posts.Count, StringFormat=총 {0}건}"
-                                   Foreground="Gray"/>
-                    </DockPanel>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                            FontSize="15"
+                            FontWeight="SemiBold"
+                            Text="게시글 목록"/>
+                        <TextBlock Grid.Column="1"
+                            Text="{Binding Posts.Count, StringFormat=총 {0}건}"
+                            Foreground="Gray"
+                            HorizontalAlignment="Right"/>
+                    </Grid>
 
                     <DataGrid Grid.Row="2"
                               ItemsSource="{Binding Posts}"
