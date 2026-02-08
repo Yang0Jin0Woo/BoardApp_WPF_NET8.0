@@ -67,7 +67,11 @@ namespace BoardApp.Repositories
             using var db = _dbFactory();
 
             db.Posts.Remove(new Post { Id = id });
-            await db.SaveChangesAsync();
+            var affected = await db.SaveChangesAsync();
+            if (affected == 0)
+            {
+                throw new InvalidOperationException("게시글이 존재하지 않아 삭제할 수 없습니다.");
+            }
         }
 
     }
