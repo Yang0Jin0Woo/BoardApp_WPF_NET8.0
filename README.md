@@ -68,8 +68,10 @@ BoardApp
  │
  ├─ Views
  │   └─ MainWindow.xaml
+ │        └─ MainWindow.xaml.cs
  │
- └─ App.xaml / App.xaml.cs
+ └─ App.xaml
+	  └─ App.xaml.cs
 ```
 
 ---
