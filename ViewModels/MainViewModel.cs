@@ -149,19 +149,14 @@ namespace BoardApp.ViewModels
 
         private void ReplacePostInList(Post updated)
         {
-            var index = -1;     // 아직 못 찾음(루프에서 찾으면 index를 실제 위치로 설정)
             for (int i = 0; i < Posts.Count; i++)
             {
                 if (Posts[i].Id == updated.Id)
                 {
-                    index = i;
-                    break;
+                    Posts[i] = updated;
+                    SelectedPost = updated;
+                    return;
                 }
-            }
-            if (index >= 0)
-            {
-                Posts[index] = updated;
-                SelectedPost = updated;
             }
         }
     }
