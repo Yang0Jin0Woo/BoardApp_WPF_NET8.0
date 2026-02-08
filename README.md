@@ -32,6 +32,19 @@
 - EF Core
 - SQLite
 
+## 사용한 NuGet 패키지
+
+- CommunityToolkit.Mvvm
+	- WPF MVVM 패턴 구현을 위한 라이브러리
+- Microsoft.EntityFrameworkCore
+	- .NET 환경에서 데이터베이스와 객체 간 매핑을 위한 ORM 프레임워크
+- Microsoft.EntityFrameworkCore.Sqlite
+	- SQLite 데이터베이스를 사용하기 위한 EF Core Provider
+- Microsoft.EntityFrameworkCore.Design
+	- 마이그레이션 생성 등 설계 기능 지원
+- Microsoft.EntityFrameworkCore.Tools
+	- Package Manager Console 및 CLI에서 마이그레이션 명령어를 사용하기 위한 도구
+
 
 # 3. 주요 기능
 
