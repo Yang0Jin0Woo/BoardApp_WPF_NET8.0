@@ -96,8 +96,7 @@ namespace BoardApp.ViewModels
                     Id = SelectedPost.Id,
                     Title = Title,
                     Content = Content,
-                    Author = Author,
-                    CreatedAtUtc = SelectedPost.CreatedAtUtc
+                    Author = Author
                 };
 
                 await _service.UpdateAsync(updated);
