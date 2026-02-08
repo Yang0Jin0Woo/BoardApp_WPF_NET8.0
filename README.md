@@ -15,7 +15,6 @@
 
 ![등록 및 조회 화면](images/image_CRUDstart.png)
 
----
 
 # 1. 프로젝트 목적
 
@@ -24,7 +23,6 @@
 - Repository / Service 분리 설계 연습
 - 기본 CRUD 패턴 구현
 
----
 
 # 2. 기술 스택
 
@@ -34,7 +32,6 @@
 - EF Core
 - SQLite
 
----
 
 # 3. 주요 기능
 
@@ -42,7 +39,6 @@
 - 선택 상태 기반 UI 전환 (등록 / 수정 모드)
 - SQLite 로컬 DB 저장
 
----
 
 # 4. 프로젝트 구조
 
@@ -74,7 +70,6 @@ BoardApp
 	  └─ App.xaml.cs
 ```
 
----
 
 # 5. 계층 설계 의도
 
@@ -83,7 +78,6 @@ BoardApp
 - DB 테이블 구조 정의
 - Post 엔티티
 
----
 
 ## Data (DbContext)
 
@@ -91,7 +85,6 @@ BoardApp
 - EF Core 설정
 - Migration 대상
 
----
 
 ## Repository
 
@@ -101,7 +94,6 @@ BoardApp
 	- DB 교체 시 영향 최소화
 - CRUD 직접 수행
 
----
 
 ## Service
 
@@ -111,7 +103,6 @@ BoardApp
 	- UI와 DB 사이 결합도 감소하여 유지보수 용이
 - 입력값 검증
 
----
 
 ## ViewModel
 
@@ -121,14 +112,12 @@ BoardApp
 - Command 처리
 - MVVM 패턴 핵심
 
----
 
 ## View (WPF)
 
 - 목록 + 상세 입력 폼 구조
 - 선택 상태 기반 등록/수정 모드 전환
 
----
 
 # 6. 실행 방법
 
@@ -140,7 +129,6 @@ dotnet restore
 
 또는 Visual Studio에서 빌드
 
----
 
 ## 2) 최초 실행 전 마이그레이션 생성
 
@@ -150,7 +138,6 @@ dotnet restore
 dotnet ef migrations add InitialCreate
 ```
 
----
 
 ## 3) DB 생성 및 적용
 
@@ -160,7 +147,6 @@ dotnet ef database update
 
 실행 후 `board.db` 파일이 생성됩니다.
 
----
 
 # 7. 실행
 
@@ -176,7 +162,6 @@ F5 실행
 dotnet run
 ```
 
----
 
 # 8. 동작 흐름
 
