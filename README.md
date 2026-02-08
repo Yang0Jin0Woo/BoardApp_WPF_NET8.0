@@ -1,19 +1,19 @@
 ﻿# BoardApp
 
 
-- WPF(.NET 8) 기반의 간단한 CRUD 게시판 애플리케이션입니다.
-- EF Core + SQLite를 사용하여 로컬 DB에 데이터를 저장하며, Repository / Service 계층을 분리하여 유지보수 가능한 구조로 설계했습니다.
+- WPF(.NET 8) 기반의 간단한 CRUD 게시판 애플리케이션
+- EF Core + SQLite를 사용하여 로컬 DB에 데이터 저장하고 Repository / Service 계층을 분리하여 유지보수 용이.
 
 
 ## 실행 화면
 
 ### 초기 화면
 
-![초기 화면](images/image_CRUDstart.png)
+![메인 화면](images/image_main.png)
 
 ### 게시글 등록 및 조회
 
-![메인 화면](images/image_main.png)
+![등록 및 조회 화면](images/image_CRUDstart.png)
 
 ---
 
