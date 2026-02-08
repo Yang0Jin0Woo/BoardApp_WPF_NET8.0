@@ -123,9 +123,9 @@ namespace BoardApp.ViewModels
 
             try
             {
-                await _service.DeleteAsync(SelectedPost.Id);
-                Posts.Remove(SelectedPost);
-                ClearForm();
+                var toDelete = SelectedPost;
+                await _service.DeleteAsync(toDelete.Id);
+                Posts.Remove(toDelete);
                 SelectedPost = null;
                 StatusMessage = "삭제 완료";
             }
