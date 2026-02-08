@@ -47,7 +47,16 @@ namespace BoardApp.Services
             await _repo.UpdateAsync(existing);
         }
 
-        public Task DeleteAsync(int id) => _repo.DeleteAsync(id);
+        public async Task DeleteAsync(int id)
+        {
+            var existing = await _repo.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new InvalidOperationException("게시글이 존재하지 않아 삭제할 수 없습니다.");
+            }
+
+            await _repo.DeleteAsync(id);
+        }
 
         private static void Validate(string title, string content, string author)
         {

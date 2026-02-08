@@ -92,16 +92,9 @@ namespace BoardApp.ViewModels
 
             try
             {
-                var latest = await _service.GetByIdAsync(SelectedPost.Id);
-                if (latest == null)
-                {
-                    StatusMessage = "게시글이 존재하지 않아 수정할 수 없습니다.";
-                    return;
-                }
-
                 await _service.UpdateAsync(new Post
                 {
-                    Id = latest.Id,
+                    Id = SelectedPost.Id,
                     Title = Title,
                     Content = Content,
                     Author = Author
@@ -126,14 +119,7 @@ namespace BoardApp.ViewModels
 
             try
             {
-                var latest = await _service.GetByIdAsync(SelectedPost.Id);
-                if (latest == null)
-                {
-                    StatusMessage = "게시글이 존재하지 않아 삭제할 수 없습니다.";
-                    return;
-                }
-
-                await _service.DeleteAsync(latest.Id);
+                await _service.DeleteAsync(SelectedPost.Id);
                 ClearForm();
                 await LoadAsync();
                 StatusMessage = "삭제 완료";

@@ -46,17 +46,14 @@ namespace BoardApp.Repositories
         public async Task UpdateAsync(Post post)
         {
             using var db = _dbFactory();
+            post.UpdatedAtUtc = DateTime.UtcNow;
 
-            var entity = await db.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
-            if (entity == null)
-            {
-                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
-            }
-
-            entity.Title = post.Title;
-            entity.Content = post.Content;
-            entity.Author = post.Author;
-            entity.UpdatedAtUtc = DateTime.UtcNow;
+            db.Posts.Attach(post);
+            var entry = db.Entry(post);
+            entry.Property(p => p.Title).IsModified = true;
+            entry.Property(p => p.Content).IsModified = true;
+            entry.Property(p => p.Author).IsModified = true;
+            entry.Property(p => p.UpdatedAtUtc).IsModified = true;
 
             await db.SaveChangesAsync();
         }
