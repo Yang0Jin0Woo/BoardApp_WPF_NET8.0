@@ -11,7 +11,6 @@ namespace BoardApp.Data
         public DbSet<Post> Posts => Set<Post>();
 
         public AppDbContext() { }
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,13 +46,7 @@ namespace BoardApp.Data
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            var dbPath = AppDbContext.GetDbPath();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlite($"Data Source={dbPath}")
-                .Options;
-
-            return new AppDbContext(options);
+            return new AppDbContext();
         }
     }
 }
