@@ -51,6 +51,10 @@
 - 게시글 등록/조회/수정/삭제
 - 선택 상태 기반 UI 전환 (등록 / 수정 모드)
 - SQLite 로컬 DB 저장
+- DI 구성으로 계층 간 의존성 분리 (ServiceCollection 사용)
+- DbContext는 작업 1회 생성/폐기(Factory 기반)로 수명 관리
+- SaveChanges 시점에 생성/수정 UTC 시간 자동 반영
+- 조회 전용/수정 전용 흐름 분리 (읽기: AsNoTracking, 수정: FindAsync)
 
 
 # 4. 프로젝트 구조
