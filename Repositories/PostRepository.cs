@@ -44,7 +44,7 @@ namespace BoardApp.Repositories
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            var existing = await db.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+            var existing = await db.Posts.FindAsync(post.Id);
             if (existing == null) return null;
 
             existing.Title = post.Title;
@@ -59,7 +59,7 @@ namespace BoardApp.Repositories
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            var existing = await db.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            var existing = await db.Posts.FindAsync(id);
             if (existing == null) return false;
 
             db.Posts.Remove(existing);
