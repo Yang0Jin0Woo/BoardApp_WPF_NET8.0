@@ -4,19 +4,21 @@ namespace BoardApp.Views
 {
     public partial class MainWindow : Window
     {
-        private bool _loadedOnce;
-
-        public MainWindow()
+        private bool _initialized;
+        public MainWindow(BoardApp.ViewModels.MainViewModel vm)
         {
             InitializeComponent();
-            Loaded += async (_, __) =>
-            {
-                if (_loadedOnce) return;
-                _loadedOnce = true;
+            DataContext = vm;
+        }
 
-                if (DataContext is BoardApp.ViewModels.MainViewModel vm)
-                    await vm.LoadAsync();
-            };
+        protected override async void OnContentRendered(System.EventArgs e)
+        {
+            base.OnContentRendered(e);
+            if (_initialized) return;
+            _initialized = true;
+
+            if (DataContext is BoardApp.ViewModels.MainViewModel vm)
+                await vm.LoadAsync();
         }
     }
 }

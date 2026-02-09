@@ -30,6 +30,12 @@ namespace BoardApp
             window.Show();
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (_services is IDisposable d) d.Dispose();
+            base.OnExit(e);
+        }
+
         private static IServiceProvider BuildServices()
         {
             var services = new ServiceCollection();
@@ -37,20 +43,34 @@ namespace BoardApp
             services.AddDbContextFactory<AppDbContext>(options =>
                 options.UseSqlite($"Data Source={AppDbContext.GetDbPath()}"));
 
-            services.AddSingleton<IPostRepository, PostRepository>();
-            services.AddSingleton<IPostService, PostService>();
-            services.AddTransient<MainViewModel>();
-            services.AddSingleton<MainWindow>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<MainWindow>();
 
-            return services.BuildServiceProvider();
+            return services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateScopes = true,
+                ValidateOnBuild = true
+            });
         }
 
         // Composition Root (애플리케이션 구성 전담)
         private static MainWindow CreateMainWindow(IServiceProvider services)
         {
-            var window = services.GetRequiredService<MainWindow>();
-            window.DataContext = services.GetRequiredService<MainViewModel>();
-            return window;
+            var scope = services.CreateScope();
+            try
+            {
+                var scopedProvider = scope.ServiceProvider;
+                var window = scopedProvider.GetRequiredService<MainWindow>();
+                window.Closed += (_, __) => scope.Dispose();
+                return window;
+            }
+            catch
+            {
+                scope.Dispose();
+                throw;
+            }
         }
 
         // Startup (인프라 초기화)
