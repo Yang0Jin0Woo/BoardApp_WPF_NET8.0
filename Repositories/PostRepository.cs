@@ -1,7 +1,6 @@
 ﻿using BoardApp.Data;
 using BoardApp.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,16 +9,16 @@ namespace BoardApp.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        private readonly Func<AppDbContext> _dbFactory;
+        private readonly IDbContextFactory<AppDbContext> _dbFactory;
 
-        public PostRepository(Func<AppDbContext> dbFactory)
+        public PostRepository(IDbContextFactory<AppDbContext> dbFactory)
         {
             _dbFactory = dbFactory;
         }
 
         public async Task<List<Post>> GetAllAsync()
         {
-            using var db = _dbFactory();
+            await using var db = _dbFactory.CreateDbContext();
             return await db.Posts.AsNoTracking()
                 .OrderByDescending(p => p.Id)
                 .ToListAsync();
@@ -27,17 +26,14 @@ namespace BoardApp.Repositories
 
         public async Task<Post?> GetByIdAsync(int id)
         {
-            using var db = _dbFactory();
+            await using var db = _dbFactory.CreateDbContext();
             return await db.Posts.AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Post> AddAsync(Post post)
         {
-            using var db = _dbFactory();
-
-            post.CreatedAtUtc = DateTime.UtcNow;
-            post.UpdatedAtUtc = post.CreatedAtUtc;
+            await using var db = _dbFactory.CreateDbContext();
 
             db.Posts.Add(post);
             await db.SaveChangesAsync();
@@ -46,8 +42,7 @@ namespace BoardApp.Repositories
 
         public async Task<Post> UpdateAsync(Post post)
         {
-            using var db = _dbFactory();
-            post.UpdatedAtUtc = DateTime.UtcNow;
+            await using var db = _dbFactory.CreateDbContext();
 
             db.Posts.Attach(post);
             var entry = db.Entry(post);
@@ -62,7 +57,7 @@ namespace BoardApp.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            using var db = _dbFactory();
+            await using var db = _dbFactory.CreateDbContext();
 
             db.Posts.Remove(new Post { Id = id });
             await db.SaveChangesAsync();

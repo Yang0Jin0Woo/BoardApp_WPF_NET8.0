@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BoardApp.Data
 {
@@ -10,15 +12,7 @@ namespace BoardApp.Data
     {
         public DbSet<Post> Posts => Set<Post>();
 
-        public AppDbContext() { }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (optionsBuilder.IsConfigured) return;
-
-            var dbPath = GetDbPath();
-            optionsBuilder.UseSqlite($"Data Source={dbPath}");
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +22,36 @@ namespace BoardApp.Data
                 e.Property(x => x.Author).HasMaxLength(50).IsRequired();
                 e.Property(x => x.Content).IsRequired();
             });
+        }
+
+        public override int SaveChanges()
+        {
+            ApplyTimestamps();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ApplyTimestamps()
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var entry in ChangeTracker.Entries<Post>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAtUtc = now;
+                    entry.Entity.UpdatedAtUtc = now;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAtUtc = now;
+                }
+            }
         }
 
         internal static string GetDbPath()
@@ -46,7 +70,9 @@ namespace BoardApp.Data
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            return new AppDbContext();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlite($"Data Source={AppDbContext.GetDbPath()}");
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

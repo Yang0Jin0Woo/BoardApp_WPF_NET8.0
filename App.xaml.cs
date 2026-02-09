@@ -4,6 +4,7 @@ using BoardApp.Services;
 using BoardApp.ViewModels;
 using BoardApp.Views;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 
@@ -11,54 +12,54 @@ namespace BoardApp
 {
     public partial class App : Application
     {
+        private IServiceProvider? _services;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            if (!TryMigrateDatabase())
+            _services = BuildServices();
+
+            if (!TryMigrateDatabase(_services))
             {
                 Shutdown(-1);
                 return;
             }
 
-            var window = CreateMainWindow();
+            var window = CreateMainWindow(_services);
             window.Show();
         }
 
+        private static IServiceProvider BuildServices()
+        {
+            var services = new ServiceCollection();
+
+            services.AddDbContextFactory<AppDbContext>(options =>
+                options.UseSqlite($"Data Source={AppDbContext.GetDbPath()}"));
+
+            services.AddSingleton<IPostRepository, PostRepository>();
+            services.AddSingleton<IPostService, PostService>();
+            services.AddTransient<MainViewModel>();
+            services.AddSingleton<MainWindow>();
+
+            return services.BuildServiceProvider();
+        }
+
         // Composition Root (애플리케이션 구성 전담)
-        private MainWindow CreateMainWindow()
+        private static MainWindow CreateMainWindow(IServiceProvider services)
         {
-            var vm = CreateMainViewModel();
-            return new MainWindow { DataContext = vm };
+            var window = services.GetRequiredService<MainWindow>();
+            window.DataContext = services.GetRequiredService<MainViewModel>();
+            return window;
         }
-
-        private MainViewModel CreateMainViewModel()
-        {
-            var service = CreatePostService();
-            return new MainViewModel(service);
-        }
-
-        private IPostService CreatePostService()
-        {
-            var repo = CreatePostRepository();
-            return new PostService(repo);
-        }
-
-        private IPostRepository CreatePostRepository()
-        {
-            var dbFactory = CreateDbFactory();
-            return new PostRepository(dbFactory);
-        }
-
-        private static Func<AppDbContext> CreateDbFactory()
-            => () => new AppDbContext();
 
         // Startup (인프라 초기화)
-        private static bool TryMigrateDatabase()
+        private static bool TryMigrateDatabase(IServiceProvider services)
         {
             try
             {
-                using var db = new AppDbContext();
+                var factory = services.GetRequiredService<IDbContextFactory<AppDbContext>>();
+                using var db = factory.CreateDbContext();
                 db.Database.Migrate();
                 return true;
             }
