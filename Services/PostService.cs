@@ -34,7 +34,7 @@ namespace BoardApp.Services
             var updated = await _repo.UpdateAsync(post);
             if (updated == null)
             {
-                throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
+                throw new KeyNotFoundException("게시글이 존재하지 않아 수정할 수 없습니다.");
             }
 
             return updated;
@@ -45,7 +45,7 @@ namespace BoardApp.Services
             var deleted = await _repo.DeleteAsync(id);
             if (!deleted)
             {
-                throw new InvalidOperationException("게시글이 존재하지 않아 삭제할 수 없습니다.");
+                throw new KeyNotFoundException("게시글이 존재하지 않아 삭제할 수 없습니다.");
             }
         }
 
