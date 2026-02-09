@@ -21,6 +21,8 @@ namespace BoardApp.Data
                 e.Property(x => x.Title).HasMaxLength(200).IsRequired();
                 e.Property(x => x.Author).HasMaxLength(50).IsRequired();
                 e.Property(x => x.Content).IsRequired();
+                e.Property(x => x.CreatedAtUtc).IsRequired();
+                e.Property(x => x.UpdatedAtUtc).IsRequired();
             });
         }
 
@@ -38,7 +40,7 @@ namespace BoardApp.Data
 
         private void ApplyTimestamps()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             foreach (var entry in ChangeTracker.Entries<Post>())
             {
@@ -49,6 +51,7 @@ namespace BoardApp.Data
                 }
                 else if (entry.State == EntityState.Modified)
                 {
+                    entry.Property(p => p.CreatedAtUtc).IsModified = false;
                     entry.Entity.UpdatedAtUtc = now;
                 }
             }
@@ -76,3 +79,4 @@ namespace BoardApp.Data
         }
     }
 }
+

@@ -10,7 +10,8 @@ namespace BoardApp.Models
         public string Content { get; set; } = "";
         public string Author { get; set; } = "";
 
-        public DateTime CreatedAtUtc { get; set; }
-        public DateTime UpdatedAtUtc { get; set; }
+        public DateTimeOffset CreatedAtUtc { get; set; }
+        public DateTimeOffset UpdatedAtUtc { get; set; }
     }
 }
+

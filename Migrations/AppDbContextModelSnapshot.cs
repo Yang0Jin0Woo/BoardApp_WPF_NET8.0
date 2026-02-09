@@ -32,7 +32,7 @@ namespace BoardApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAtUtc")
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -40,7 +40,7 @@ namespace BoardApp.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAtUtc")
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

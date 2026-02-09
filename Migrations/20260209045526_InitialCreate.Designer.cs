@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoardApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260208082354_InitialCreate")]
+    [Migration("20260209045526_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace BoardApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAtUtc")
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -43,7 +43,7 @@ namespace BoardApp.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAtUtc")
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

@@ -20,8 +20,8 @@ namespace BoardApp.Migrations
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
                     Author = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
