@@ -21,10 +21,7 @@ namespace BoardApp.Services
         public async Task<Post> CreateAsync(Post post)
         {
             if (post == null) throw new ArgumentNullException(nameof(post));
-            Validate(post.Title, post.Content, post.Author);
-            post.Title = post.Title.Trim();
-            post.Content = post.Content.Trim();
-            post.Author = post.Author.Trim();
+            NormalizeAndValidate(post);
 
             return await _repo.AddAsync(post);
         }
@@ -32,10 +29,7 @@ namespace BoardApp.Services
         public async Task<Post> UpdateAsync(Post post)
         {
             if (post == null) throw new ArgumentNullException(nameof(post));
-            Validate(post.Title, post.Content, post.Author);
-            post.Title = post.Title.Trim();
-            post.Content = post.Content.Trim();
-            post.Author = post.Author.Trim();
+            NormalizeAndValidate(post);
 
             var updated = await _repo.UpdateAsync(post);
             if (updated == null)
@@ -55,11 +49,20 @@ namespace BoardApp.Services
             }
         }
 
-        private static void Validate(string title, string content, string author)
+        // Trim(정규화) -> Validate(검증)
+        private static void NormalizeAndValidate(Post post)
         {
-            if (string.IsNullOrWhiteSpace(title)) throw new ArgumentException("제목은 필수입니다.");
-            if (string.IsNullOrWhiteSpace(author)) throw new ArgumentException("작성자는 필수입니다.");
-            if (string.IsNullOrWhiteSpace(content)) throw new ArgumentException("내용은 필수입니다.");
+            post.Title = post.Title?.Trim() ?? "";
+            post.Author = post.Author?.Trim() ?? "";
+            post.Content = post.Content?.Trim() ?? "";
+
+            if (post.Title.Length == 0)
+                throw new ArgumentException("제목은 필수입니다.", nameof(post.Title));
+            if (post.Author.Length == 0)
+                throw new ArgumentException("작성자는 필수입니다.", nameof(post.Author));
+            if (post.Content.Length == 0)
+                throw new ArgumentException("내용은 필수입니다.", nameof(post.Content));
         }
+
     }
 }

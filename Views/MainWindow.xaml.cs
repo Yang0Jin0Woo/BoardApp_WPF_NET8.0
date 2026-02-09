@@ -1,14 +1,17 @@
-﻿using System.Windows;
+﻿using BoardApp.ViewModels;
+using System.Windows;
 
 namespace BoardApp.Views
 {
     public partial class MainWindow : Window
     {
         private bool _initialized;
-        public MainWindow(BoardApp.ViewModels.MainViewModel vm)
+        private readonly MainViewModel _vm;
+        public MainWindow(MainViewModel vm)
         {
             InitializeComponent();
-            DataContext = vm;
+            _vm = vm;
+            DataContext = _vm;
         }
 
         protected override async void OnContentRendered(System.EventArgs e)
@@ -17,8 +20,7 @@ namespace BoardApp.Views
             if (_initialized) return;
             _initialized = true;
 
-            if (DataContext is BoardApp.ViewModels.MainViewModel vm)
-                await vm.LoadAsync();
+            await _vm.LoadAsync();
         }
     }
 }
