@@ -33,29 +33,26 @@ namespace BoardApp.Services
         {
             if (post == null) throw new ArgumentNullException(nameof(post));
             Validate(post.Title, post.Content, post.Author);
+            post.Title = post.Title.Trim();
+            post.Content = post.Content.Trim();
+            post.Author = post.Author.Trim();
 
-            var existing = await _repo.GetByIdAsync(post.Id);
-            if (existing == null)
+            var updated = await _repo.UpdateAsync(post);
+            if (updated == null)
             {
                 throw new InvalidOperationException("게시글이 존재하지 않아 수정할 수 없습니다.");
             }
 
-            existing.Title = post.Title.Trim();
-            existing.Content = post.Content.Trim();
-            existing.Author = post.Author.Trim();
-
-            return await _repo.UpdateAsync(existing);
+            return updated;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var existing = await _repo.GetByIdAsync(id);
-            if (existing == null)
+            var deleted = await _repo.DeleteAsync(id);
+            if (!deleted)
             {
                 throw new InvalidOperationException("게시글이 존재하지 않아 삭제할 수 없습니다.");
             }
-
-            await _repo.DeleteAsync(id);
         }
 
         private static void Validate(string title, string content, string author)

@@ -40,27 +40,31 @@ namespace BoardApp.Repositories
             return post;
         }
 
-        public async Task<Post> UpdateAsync(Post post)
+        public async Task<Post?> UpdateAsync(Post post)
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            db.Posts.Attach(post);
-            var entry = db.Entry(post);
-            entry.Property(p => p.Title).IsModified = true;
-            entry.Property(p => p.Content).IsModified = true;
-            entry.Property(p => p.Author).IsModified = true;
-            entry.Property(p => p.UpdatedAtUtc).IsModified = true;
+            var existing = await db.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
+            if (existing == null) return null;
+
+            existing.Title = post.Title;
+            existing.Content = post.Content;
+            existing.Author = post.Author;
 
             await db.SaveChangesAsync();
-            return post;
+            return existing;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             await using var db = _dbFactory.CreateDbContext();
 
-            db.Posts.Remove(new Post { Id = id });
+            var existing = await db.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            if (existing == null) return false;
+
+            db.Posts.Remove(existing);
             await db.SaveChangesAsync();
+            return true;
         }
 
     }
