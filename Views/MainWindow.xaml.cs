@@ -1,5 +1,6 @@
 ﻿using BoardApp.ViewModels;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace BoardApp.Views
@@ -22,7 +23,9 @@ namespace BoardApp.Views
             if (_initialized) return;
             _initialized = true;
 
-            _ = _vm.LoadAsync();
+            _ = InitializeAsync();
         }
+
+        private Task InitializeAsync() => _vm.LoadAsync();
     }
 }
