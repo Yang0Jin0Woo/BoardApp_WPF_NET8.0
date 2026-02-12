@@ -33,16 +33,17 @@ namespace BoardApp.ViewModels
             try
             {
                 StatusMessage = "불러오는 중...";
-                Posts.Clear();
-
                 var items = await _service.GetAllAsync();
+
+                Posts.Clear();
                 foreach (var item in items) Posts.Add(item);
 
                 StatusMessage = $"총 {Posts.Count}건";
             }
             catch (Exception ex)
             {
-                StatusMessage = ex.Message;
+                System.Diagnostics.Debug.WriteLine(ex);
+                StatusMessage = "불러오기 실패";
             }
         }
 
@@ -76,7 +77,8 @@ namespace BoardApp.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = ex.Message;
+                System.Diagnostics.Debug.WriteLine(ex);
+                StatusMessage = "등록 실패";
             }
         }
 
@@ -105,7 +107,8 @@ namespace BoardApp.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = ex.Message;
+                System.Diagnostics.Debug.WriteLine(ex);
+                StatusMessage = "수정 실패";
             }
         }
 
@@ -128,7 +131,8 @@ namespace BoardApp.ViewModels
             }
             catch (Exception ex)
             {
-                StatusMessage = ex.Message;
+                System.Diagnostics.Debug.WriteLine(ex);
+                StatusMessage = "삭제 실패";
             }
         }
 
