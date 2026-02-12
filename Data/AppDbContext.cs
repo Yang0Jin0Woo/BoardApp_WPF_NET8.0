@@ -1,6 +1,5 @@
 ﻿using BoardApp.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.IO;
 using System.Threading;
@@ -66,16 +65,6 @@ namespace BoardApp.Data
             Directory.CreateDirectory(dir);
 
             return Path.Combine(dir, "board.db");
-        }
-    }
-
-    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
-    {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlite($"Data Source={AppDbContext.GetDbPath()}");
-            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

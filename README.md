@@ -158,7 +158,7 @@ dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
-실행 후 `board.db` 파일이 생성됩니다.
+실행 후 DB 파일은 `\BoardApp\board.db` 경로에 생성됩니다.
 
 
 # 7. 실행
