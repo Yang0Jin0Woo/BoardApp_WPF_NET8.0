@@ -1,4 +1,5 @@
 ﻿using BoardApp.ViewModels;
+using System;
 using System.Windows;
 
 namespace BoardApp.Views
@@ -7,6 +8,7 @@ namespace BoardApp.Views
     {
         private bool _initialized;
         private readonly MainViewModel _vm;
+
         public MainWindow(MainViewModel vm)
         {
             InitializeComponent();
@@ -14,13 +16,13 @@ namespace BoardApp.Views
             DataContext = _vm;
         }
 
-        protected override async void OnContentRendered(System.EventArgs e)
+        protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
             if (_initialized) return;
             _initialized = true;
 
-            await _vm.LoadAsync();
+            _ = _vm.LoadAsync();
         }
     }
 }
